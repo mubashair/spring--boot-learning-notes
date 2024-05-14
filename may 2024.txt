@@ -1,0 +1,31 @@
+14-5-2024
+Class 15
+connecting with multiple databases
+create config package
+@CofigurationProperties(prefix="spring.datasource")
+@Component
+class DatabaseConfigProp{
+
+private String url;
+priavate String userName;
+private String pass;
+
+setters
+getters
+}
+application-dev.properties{
+connect with h2-mem
+
+}
+application-prod.properteis{
+
+connect with mysql
+
+}
+application.properties{
+spring.profiles.active=dev;//prod
+
+
+//default db
+//if you dont specify
+}
