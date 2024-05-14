@@ -15,11 +15,14 @@ getters
 }
 application-dev.properties{
 connect with h2-mem
+spring.h2.console.enabled=true;
+spring.datasource.url=jdbc:h2:mem:dev_emp_db;
 
 }
 application-prod.properteis{
 
 connect with mysql
+spring.datasource.url=jdbc:mysql://localhost:3306//prod_emp_db;
 
 }
 application.properties{
@@ -31,3 +34,14 @@ spring.profiles.active=dev;//prod
 }
 Mubashar
 Kausar
+15-5-2024
+spring profile
+application.properties{
+spring.h2.console.enabled=true;
+
+spring.profiles.active=dev;
+
+
+spring.datasource.url=jdbc:h2:mem:default_emp_db;
+
+}
