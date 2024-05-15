@@ -63,4 +63,11 @@ hibernate is implementation of jpa(orm framwork or software)
 hibernate is class and jpa is an interface
 ->Relationship between java class object and database table
 nothing but orm framework
+project name->spring-boot-jpa
+dependencies
+1-spring web
+2-spring datajpa
+3-H2 Database
+4-spring boot dev tools
+
 
