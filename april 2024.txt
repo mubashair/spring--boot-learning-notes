@@ -1,0 +1,418 @@
+download node js
+node --version'
+npm --version
+for creating react app
+npx creat-react-app todos-list
+what is npm and npx
+26-3-24
+creating a quiz app
+localhost:8080/quiz/creat?category=java&numQ=5&title=jQuiz //this is our url
+class QuizController{
+   @Autowired
+   @QuizService quizService
+   @PostMapping("/create")
+   public ResponseEntity<String> createQuiz(@RequestParam String category, @RequestParam int numQ, 
+   @RequestParam String title){
+      quizService.createQuiz(category, numQ, title);
+      //return new ResponseEntity<>("Hi quiz", HttpStatus.Ok);
+	  
+   }
+}
+//model class for questions for quiz
+class Quiz{
+   integer id;
+   private String title;
+   @ManyToMany
+   private List<Question> questions;
+}
+//service class
+ class QuizService{
+    QuizDao quizDao;
+	QuestionDao questionDao;
+	
+	public ResponseEntity<String> createQuiz(String category, int numQ, String title){
+	   List<Question> questions = questionDao.getRandomQuestionsByCategory(category, numQ);
+	   Quiz quiz = new Quiz();
+	   quiz.setTitle(title);
+	   quiz.setQuestions(questions);
+	   
+	   return new ResponseEntity<>("sucess", HttpStatus.Created);
+	}
+ }
+ //dao layer
+ interface QuizDao extends JpaRepository<Question, integer>{
+    @Query(value="select * from question q where q.category=:category ORDER BY RANDOM() LIMIT: numQ", nativeQuery=true);
+    List<Question> getRandomQuestionsByCategory(String category, int numQ);
+ }
+ logging.level.org.springframework=debug
+27-3-24
+how to fetch questions for quiz from the database in quiz app
+from here we are able to get  a particular quiz with id
+url->localhost:8080/quiz/get/1
+@GetMapping("/get/{id}")
+class QuizController{
+   public ResponseEntity<List<QuestionWrapper>> getQuizQuestions
+(@PathVariable Integer id){
+   return quizService.getQuizQuestions(id);
+}
+}
+//model class
+29-3-24
+submitting the quiz to get the score
+localhost:8080/quiz/submit/1  this is our url
+
+
+class QuizController{
+	
+	public ResponseEntity<Integer>  submitQuiz(@PathVariable Integer id, 
+@RequestBody List<Response> responses){
+		return quizServic.calculateResult(id, responses);
+	}
+}
+//model class
+@Data
+@RequiredArgsConstructor->it will give parametrized and default constructor
+class Response{
+   private int id;
+private String response;
+}
+//service class
+class QuizService{
+	public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses){
+		Quiz quiz = quizDao.findQuizById(id).get();
+		List<Question> questions = quiz.getQuestions();
+		int right = 0;
+		int i = 0;
+		for(Response resposne:responses){
+			if(response.getResponse().equals(questions.get(i).getRighatAnswer))
+				right++;
+			i++;
+		}
+		return new ResposneEntity<>(right, HttpStatus.Ok);
+	}
+}
+30-3-24
+In question-service
+we need to implemnet 
+add
+remove
+update
+delete
+->generate(create) getting the questionIds for quiz from question
+->getQuestions(based on questionId)
+->getting the score after submitting the quiz
+1-4-24
+ErrorMvcAutoConfiguration class->for whitelabel error
+JacksonutoConfiguration class->converting bean into json formt
+class QuestionWrapper{
+	 Integer id;
+	String questionTitle;
+	String Option1;
+	String Option2;
+	String Option3;
+	String Option4;
+  	//parametrized constructor
+
+}
+class QuizService{
+	 public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(Integer id){
+	Quiz quiz = quizDao.findById(id);
+	List<Question> questionsFromDB = quiz.get.getQuestions();
+	List<QuestionWrapper > questionsForUser =  new ArrayList<>();
+
+	for(Question q :questionFromDB){
+		QuestionWrapper qw = new QuestionWrapper(q.getId, q.getTitle, q.getOption1, q.getOption2, q.getOption3, q.getOption4);
+		questionForUser.add(qw);
+	}	
+
+                  return ResponseEntity<>(questionForUser, HttpStatus.Ok);
+}
+}
+@SpringBootApplication
+=@cofiguration@ComponentScan@EnableAutoConfiguration
+SpringBootApp flow
+run() method internal flow
+1)creates application context
+2)check application type
+3)register the annotated beans classwith context
+4)creates an instance of tomcatembeddServletContainser and adds the context 
+used to deploy our jars automatically
+2-4-24
+son->javascript object notation
+json formatter plugin
+//getting all users
+@GetMapping("/allUsers")
+public List<UserDTO> getAllUsers(){
+	return userList;
+}
+//getting a specific user based on id
+@GetMapping("/user/id")
+public UserDTO getUser(@PathVariable Long id){
+	return userList.Stream()
+		.filter(user->user.getUserId.equals(id))
+		.findFirst()
+		.get();
+`		
+}
+4-4-24
+ow to run multiple instances of spring boot app
+run as-> run configurations
+duplicate the selected app
+rename it like question service 8081
+in arguments tab
+there is vm arguments
+write->-Dserver.port=8081
+apply and run
+In this way you can create another instance of  your app
+5-4-24
+In question-service
+we need to implemnet 
+add
+remove
+update
+delete
+->generate(create) getting the questionIds for quiz from question
+->getQuestions(based on questionId)
+->getting the score after submitting the quiz
+class QuestionController{
+@GetMapping("generateQuestionIdsForQuiz")
+ResponseEntity<List<Integer>> getQuestionIdsForQuiz(
+@RequestParam String categoryOfQuestions, @RequestParam Integer numOfQuestions){
+	return questionService.getQuestionIdsForQuiz(
+                    categoryOfQuestions, numOfQuestions);
+}
+}
+class QuestionService{
+ResponseEntity<List<Integer>> getQuestionIdsForQuiz(
+String categoryOfQuestions, numOfQuestions){
+	List<Integer> questionIds = questionDao.findRandomQuestionIdsForQuiz(
+                    categoryOfQuestions, numOfQuestions);
+	return new ResponseEntity<>(questionIds, HttpStatus.Ok);
+
+
+}
+}
+class QuestionDao extends JpaRepository<Question, id>{
+@Query(value="select q.id from question where q.category=:categoryOfQuestions order by rand() limit:numOfQuestions", nativeQuery=true)
+List<Integer>  findRandomQuestionIds(
+	categoryOfQuestions, numOfQuestions)
+}
+9-4-2024
+creating a service registry
+servic-registry(sb app)
+@EnableEurekaServer(in service-registry )
+server.port=8761
+eureka.instance.hostname= localhost
+eureka.client.fetch.registry=false
+eureka.client.register-with-eureka=false
+10-4-24
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+<artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+
+
+
+---------------JAVA Conceptual Topic-------------
+
+--: Threads in java By Durga Sir..
+--: JVM, Garbag Collector
+--: Java 8 features 
+--: Exception Handling in java (10)
+_____________quiz micro service-----------
+also in pom
+uncomment the dependencies of open feign and eureka clinet
+@FeignClient(QUESTION-SERVICE)
+public interface quizinterface{
+}
+11-4-2024
+--------------------------------------------------
+QuizController
+package com.telusko.quizservice.controller;
+
+import com.telusko.quizservice.model.QuestionWrapper;
+import com.telusko.quizservice.model.QuizDto;
+import com.telusko.quizservice.model.Response;
+import com.telusko.quizservice.service.QuizService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("quiz")
+public class QuizController {
+
+    @Autowired
+    QuizService quizService;
+
+    @PostMapping("create")
+    public ResponseEntity<String> createQuiz(@RequestBody QuizDto quizDto){
+        return quizService.createQuiz(quizDto.getCategoryName(), quizDto.getNumQuestions(), quizDto.getTitle());
+    }
+
+    @PostMapping("get/{id}")
+    public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(@PathVariable Integer id){
+        return quizService.getQuizQuestions(id);
+    }
+
+    @PostMapping("submit/{id}")
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<Response> responses){
+        return quizService.calculateResult(id, responses);
+    }
+
+
+}
+--------------------------------------------------quizservice-------------------------
+package com.telusko.quizservice.service;
+
+import com.telusko.quizservice.dao.QuizDao;
+import com.telusko.quizservice.feign.QuizInterface;
+import com.telusko.quizservice.model.QuestionWrapper;
+import com.telusko.quizservice.model.Quiz;
+import com.telusko.quizservice.model.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class QuizService {
+
+    @Autowired
+    QuizDao quizDao;
+
+    @Autowired
+    QuizInterface quizInterface;
+
+
+    public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
+
+        List<Integer> questions = quizInterface.getQuestionsForQuiz(category, numQ).getBody();
+        Quiz quiz = new Quiz();
+        quiz.setTitle(title);
+        quiz.setQuestionIds(questions);
+        quizDao.save(quiz);
+
+        return new ResponseEntity<>("Success", HttpStatus.CREATED);
+
+    }
+
+    public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(Integer id) {
+          Quiz quiz = quizDao.findById(id).get();
+          List<Integer> questionIds = quiz.getQuestionIds();
+          ResponseEntity<List<QuestionWrapper>> questions = quizInterface.getQuestionsFromId(questionIds);
+          return questions;
+
+    }
+
+    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {
+        ResponseEntity<Integer> score = quizInterface.getScore(responses);
+        return score;
+    }
+---------------id=3--------
+2
+10
+9
+11
+12
+}
+--------load balancing-------
+@Autowired
+Environment environment;
+System.out.println(environment.getProperty("local.server.port"));
+this is for to check that which particular instance of question service is called like port 8080, 8081, 8082 etc;
+----------------------------12-4-2024------------------
+API Gateway
+create in spring initializer
+api-gateway(spring boot app)
+dependencies-> apigateway(spring cloud routing)
+->Eureka discovery client(spring cloud discovery)
+application.properties
+server.port=8765
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+-----------------------16-4-2024-------------------
+Loose Coupling
+target class->is such a class which uses services of other class without creating the object of that class
+class LaunchCourse{
+private Course course
+
+public void setCourse(Course course){Course course = new Java();
+this.course = course;
+}
+boolean buyTheCourse(double amount){
+return course.getTheCourse(amount);
+}
+}//end class LaunchCourse
+-----------Code to interface---------
+interface Course{
+public boolean getTheCourse(double amount);
+}
+class Java{}
+class SpringBoot{}
+class Spring{}
+
+public class Main{
+    LaunchCourse lc = new LaunchCourse();
+   //java j = new Java();
+   //lc.setCourse(j);
+   lc.setCourse(new Java);
+   boolean status = lc.buyTheCourse(455.99);
+  if(status)
+      System.out.println("Course purchased successfully");
+   else
+    System.out.println("Fail to purchase");
+}
+---------------------------17-4-2024------------------------
+Class 7
+Project Name:Spring boot jdbc
+spring web
+H2 Database
+Spring data jdbc
+Spring boot devtools
+localhost:8080/h2-console
+
+in resources folder create schema.sql file
+and then create table in it
+
+create table employee(
+id bigint not null,
+firstname varchar(45) not null,
+lastname varchar(45) not null,
+mobilenumber bigint not null,
+email varchar(45) not null,
+age int not null,
+primary key(id);
+)
+code to interface
+Interface EmployeeService{
+List<Employee> findAllEmployees();
+void createEmployee();
+void updateEmployee();
+void deleteEmployee();
+Employee findEmployee();//based on id or etc
+
+}
+@Repository
+EmployeeJdbcRepository{
+@Autowired
+private JdbcTempleat jdbcTempleate;
+
+private static String SELECT_QUERY = "SELECT * FROM EMPLOYEE";
+private static String UPDATE_QUERY = "UPDATE  EMPLOYEE SET FIRSTNAME=?, LASTNAME=?, MOBILENUMBER=?, AGE=? WHERE ID=?";
+private static String SELECT_QUERY = "SELECT * FROM EMPLOYEE";
+private static String FIND_EMPLOYEE_QUERY = "SELECT * FROM EMPLOYEE WHERE ID=?";
+private static String DELETE_EMPLOYEE="DELETE EMPLOYEE WHERE ID=?";
+
+public List<Employee> findAllEmployees(){
+   jdbcTemplate.query(SELECT_QUERY, new BeanPropertyRowMapper<>(Employee.class));
+}
+
+}
