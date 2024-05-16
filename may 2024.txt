@@ -34,7 +34,8 @@ spring.profiles.active=dev;//prod
 }
 Mubashar
 Kausar
-15-5-2024
+-------------------15-5-2024------------------------------------------------
+class 16
 spring profile
 application.properties{
 spring.h2.console.enabled=true;
