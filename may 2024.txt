@@ -72,3 +72,24 @@ dependencies
 4-spring boot dev tools
 
 
+
+-----------------------19-5-2024--------------------------
+server side validation in spring boot
+It is a three step process
+1-add validation dependency in pom.xml
+2-add field level annotations in model class 
+3-@Valid in rest controller of create an employee
+
+
+----------------------20-5-2024---------------------------------
+Content negosiation
+from json to xml
+jackson format xml maven repo
+add the following dependency
+<dependency>
+<groupId>com.fasterxml.jackson.dataformat</groupId>
+<artifactId>jackson-dataformat-xml</artifactId>
+</dependency>
+in postman Headers
+accept                        application/xml
+
