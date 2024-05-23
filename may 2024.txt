@@ -56,18 +56,23 @@ spring.datasource.password=faz
 -----------------16-5-2024--------------------
 class 16 Spring data Jpa
 what is problem in jdbc?
+limitations of jdbc
+it is complex
 lot of line of code we have to write
+Knowlege of quries is mandatory
+manually write quries.
 JdbcTemplate?
-it is a database dependent 
+spring jdbc  is a database dependent software 
 you always need to write quries
-hibernate is implementation of jpa(orm framwork or software)
-hibernate is class and jpa is an interface
-->Relationship between java class object and database table
+what is hibernate and what is jpa.
+hibernate is implementation of jpa(orm framwork or software)object relational mapping
+hibernate is class and jpa(java persistence api) is an interface
+->Relationship between java class object and database table nothing but orm framework
 nothing but orm framework
 project name->spring-boot-jpa
 dependencies
 1-spring web
-2-spring datajpa
+2-spring data jpa
 3-H2 Database
 4-spring boot dev tools
 
@@ -93,3 +98,29 @@ add the following dependency
 in postman Headers
 accept                        application/xml
 
+-----------------22-5-2024----------------------------
+class 16
+create class EmployeeRestController
+create EmployeeService
+Repo
+Class EmployeeRepository{
+private EntityManage entityManage;
+public Employee findById(int id){
+   entityManage.find(Employee.class, id);
+}
+}
+Model
+//need to map java class object with database table
+//need to map porperties java class  with database table column
+@Entity
+class Employee
+@Id//id will define relationship with primary key in db table
+@GeneratedValue
+private int id;
+private String firstName;
+private String lastName;
+private Long modileNumber;
+private Integer age;
+private String email
+setters
+and getters
